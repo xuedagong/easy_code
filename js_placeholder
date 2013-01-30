@@ -1,0 +1,48 @@
+
+function isPlaceHolder(){  //判断浏览器是否支持placeholder
+        var input = document.createElement("input");
+        return "placeholder" in input;
+    }
+    if(!isPlaceHolder()){
+        function addClass(obj,cls){
+            var clsn = obj.className;
+            if(clsn.indexOf(cls) == -1){
+                obj.className = clsn + (clsn != "" ? " " : "") + cls;
+            }
+        }
+        function removeClass(obj,cls){
+            var clsn = obj.className;
+            if(clsn.indexOf(cls) != -1){
+                obj.className = clsn.replace((clsn.indexOf(" ") != -1 ? " " : "")+cls,"");
+            }
+        }
+        function placeHolder(obj){
+            if(!obj){return;}
+            var placeholder = obj.getAttribute("placeholder");
+            if(obj.value == "" || obj.value == placeholder){
+                obj.value = placeholder;
+                addClass(obj,"placeholder");
+            }
+            obj.onfocus = function(){
+                if(this.value == this.getAttribute("placeholder")){
+                    this.value = "";
+                }
+                removeClass(obj,"placeholder");
+            };
+            obj.onblur = function(){
+                if(this.value == ""){
+                    this.value = this.getAttribute("placeholder");
+                    addClass(obj,"placeholder");
+                }
+            };
+        }
+        function init(){
+            var inps = document.getElementsByTagName("input");
+            for(var i=0,len=inps.length;i<len;i++){
+                if(inps[i].getAttribute("placeholder")){
+                    placeHolder(inps[i]);
+                }
+            }
+        }
+        window.onload = init;
+    }
